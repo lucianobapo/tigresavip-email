@@ -11,6 +11,8 @@
 |
 */
 
+use App\Notifications\Email;
+
 Route::get('/', function () {
     return view('welcome');
 });

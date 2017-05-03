@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\Email;
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

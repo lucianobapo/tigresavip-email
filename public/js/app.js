@@ -68,8 +68,19 @@ new Vue({
         offset: 4,
         formErrors: {},
         formErrorsUpdate: {},
-        newItem: { 'username': '', 'email': '' },
-        fillItem: { 'username': '', 'email': '', 'id': '' }
+        newItem: {
+            'title': '',
+            'description': '',
+            'username': '',
+            'email': ''
+        },
+        fillItem: {
+            'title': '',
+            'description': '',
+            'username': '',
+            'email': '',
+            'id': ''
+        }
     },
     computed: {
         isActived: function isActived() {
@@ -99,32 +110,46 @@ new Vue({
         this.getVueItems(this.pagination.current_page);
     },
     methods: {
-        getVueItems: function getVueItems(page) {
+        sendMessage: function sendMessage(item) {
             var _this = this;
 
+            this.$http.delete('/vueitems/' + item.id).then(function (response) {
+                _this.changePage(_this.pagination.current_page);
+                toastr.success('Post Deleted Successfully.', 'Success Alert', { timeOut: 5000 });
+            });
+        },
+        getVueItems: function getVueItems(page) {
+            var _this2 = this;
+
             this.$http.get('/vueitems?page=' + page).then(function (response) {
-                _this.$set('items', response.data.data.data);
-                _this.$set('pagination', response.data.pagination);
+                _this2.$set('items', response.data.data.data);
+                _this2.$set('pagination', response.data.pagination);
             });
         },
         createItem: function createItem() {
-            var _this2 = this;
+            var _this3 = this;
 
             var input = this.newItem;
+            console.log(input);
             this.$http.post('/vueitems', input).then(function (response) {
-                _this2.changePage(_this2.pagination.current_page);
-                _this2.newItem = { 'username': '', 'email': '' };
+                _this3.changePage(_this3.pagination.current_page);
+                _this3.newItem = {
+                    'title': '',
+                    'description': '',
+                    'username': '',
+                    'email': ''
+                };
                 $("#create-item").modal('hide');
                 toastr.success('Post Created Successfully.', 'Success Alert', { timeOut: 5000 });
             }, function (response) {
-                _this2.formErrors = response.data;
+                _this3.formErrors = response.data;
             });
         },
         deleteItem: function deleteItem(item) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.$http.delete('/vueitems/' + item.id).then(function (response) {
-                _this3.changePage(_this3.pagination.current_page);
+                _this4.changePage(_this4.pagination.current_page);
                 toastr.success('Post Deleted Successfully.', 'Success Alert', { timeOut: 5000 });
             });
         },
@@ -135,16 +160,22 @@ new Vue({
             $("#edit-item").modal('show');
         },
         updateItem: function updateItem(id) {
-            var _this4 = this;
+            var _this5 = this;
 
             var input = this.fillItem;
             this.$http.put('/vueitems/' + id, input).then(function (response) {
-                _this4.changePage(_this4.pagination.current_page);
-                _this4.newItem = { 'username': '', 'email': '', 'id': '' };
+                _this5.changePage(_this5.pagination.current_page);
+                _this5.newItem = {
+                    'title': '',
+                    'description': '',
+                    'username': '',
+                    'email': '',
+                    'id': ''
+                };
                 $("#edit-item").modal('hide');
                 toastr.success('Item Updated Successfully.', 'Success Alert', { timeOut: 5000 });
             }, function (response) {
-                _this4.formErrors = response.data;
+                _this5.formErrors = response.data;
             });
         },
         changePage: function changePage(page) {

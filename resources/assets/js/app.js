@@ -66,8 +66,19 @@ new Vue({
         offset: 4,
         formErrors:{},
         formErrorsUpdate:{},
-        newItem : {'username':'','email':''},
-        fillItem : {'username':'','email':'','id':''}
+        newItem : {
+            'title':'',
+            'description':'',
+            'username':'',
+            'email':''
+        },
+        fillItem : {
+            'title':'',
+            'description':'',
+            'username':'',
+            'email':'',
+            'id':''
+        }
     },
     computed: {
         isActived: function() {
@@ -97,6 +108,12 @@ new Vue({
         this.getVueItems(this.pagination.current_page);
     },
     methods: {
+        sendMessage: function(item) {
+            this.$http.delete('/vueitems/'+item.id).then((response) => {
+                this.changePage(this.pagination.current_page);
+                toastr.success('Post Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+            });
+        },
         getVueItems: function(page) {
             this.$http.get('/vueitems?page='+page).then((response) => {
                 this.$set('items', response.data.data.data);
@@ -105,9 +122,15 @@ new Vue({
         },
         createItem: function() {
             var input = this.newItem;
+            console.log(input);
             this.$http.post('/vueitems',input).then((response) => {
                 this.changePage(this.pagination.current_page);
-                this.newItem = {'username':'','email':''};
+                this.newItem = {
+                    'title':'',
+                    'description':'',
+                    'username':'',
+                    'email':''
+                };
                 $("#create-item").modal('hide');
                 toastr.success('Post Created Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {
@@ -130,7 +153,13 @@ new Vue({
             var input = this.fillItem;
             this.$http.put('/vueitems/'+id,input).then((response) => {
                 this.changePage(this.pagination.current_page);
-                this.newItem = {'username':'','email':'','id':''};
+                this.newItem = {
+                    'title':'',
+                    'description':'',
+                    'username':'',
+                    'email':'',
+                    'id':''
+                };
                 $("#edit-item").modal('hide');
                 toastr.success('Item Updated Successfully.', 'Success Alert', {timeOut: 5000});
             }, (response) => {

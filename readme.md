@@ -9,5 +9,11 @@
 
 ## Update Command
 ```shell
-$ cd ~/code/erpnet-mailsend && git cmt && cd ~/code/erpnet-email && composer update
+$ cd ~/code/erpnet-email && gulp && cd ~/code/erpnet-mailsend && git cmt || true && cd ~/code/erpnet-email && composer update
+
+pgloader mysql://tigresav_email:@5Prc0mp@localhost/tigresav_ppm postgresql://tigresav_ppm:tigresav_ppm@localhost:5432/tigresav_ppm
+
+CREATE USER "tigresav_email" WITH PASSWORD 'tigresav_email';
+CREATE DATABASE "tigresav_email";
+GRANT ALL PRIVILEGES ON DATABASE "tigresav_email" to "tigresav_email";
 ```
